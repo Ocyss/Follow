@@ -2,7 +2,6 @@ import { useMobile } from "@follow/components/hooks/useMobile.js"
 import { Button } from "@follow/components/ui/button/index.js"
 import { Card, CardContent, CardFooter, CardHeader } from "@follow/components/ui/card/index.jsx"
 import { RelativeTime } from "@follow/components/ui/datetime/index.js"
-import { Divider } from "@follow/components/ui/divider/Divider.js"
 import {
   Form,
   FormControl,
@@ -15,6 +14,7 @@ import { Input } from "@follow/components/ui/input/index.js"
 import { ResponsiveSelect } from "@follow/components/ui/select/responsive.js"
 import { getBackgroundGradient } from "@follow/utils/color"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { repository } from "@pkg"
 import { useMutation } from "@tanstack/react-query"
 import { m } from "framer-motion"
 import { produce } from "immer"
@@ -50,6 +50,7 @@ const info: Record<
     prefix?: string[]
     showModal?: boolean
     default?: string
+    bottom?: React.ReactNode
   }
 > = {
   search: {
@@ -60,12 +61,34 @@ const info: Record<
     default: "https://",
     prefix: ["https://", "http://"],
     showModal: true,
+    bottom: (
+      <a
+        href={`${repository.url}/wiki/Folo-Flavored-Feed-Spec`}
+        target="_blank"
+        rel="noreferrer"
+        className="text-accent border-accent inline-flex w-auto items-center gap-2 rounded-full border px-3 py-0.5 text-sm"
+      >
+        <i className="i-mgc-book-6-cute-re" />
+        <span>Folo Flavored Feed Spec</span>
+      </a>
+    ),
   },
   rsshub: {
     label: "discover.rss_hub_route",
     prefix: ["rsshub://"],
     default: "rsshub://",
     showModal: true,
+    bottom: (
+      <a
+        href="https://docs.rsshub.app/"
+        target="_blank"
+        rel="noreferrer"
+        className="text-accent border-accent inline-flex w-auto items-center gap-2 rounded-full border px-3 py-0.5 text-sm"
+      >
+        <i className="i-mgc-book-6-cute-re" />
+        <span>RSSHub Docs</span>
+      </a>
+    ),
   },
 }
 
@@ -304,6 +327,7 @@ export function DiscoverForm({ type = "search" }: { type?: string }) {
           </div>
         </div>
       )}
+      <div className="mt-8">{info[type]?.bottom}</div>
     </>
   )
 }
@@ -377,9 +401,8 @@ const SearchCard: FC<{
                   })}
               </div>
             )}
-            <Divider className="mb-0" />
           </CardContent>
-          <CardFooter className="flex justify-between gap-4 border-t border-zinc-100/80 py-3 dark:border-zinc-800/80">
+          <CardFooter className="mt-4 flex justify-between gap-4 border-t border-zinc-100/80 py-3 dark:border-zinc-800/80">
             <div className="flex items-center gap-3 text-sm text-zinc-500 dark:text-zinc-400">
               <div className="flex items-center gap-1.5">
                 <i className="i-mgc-user-3-cute-re" />
@@ -409,7 +432,7 @@ const SearchCard: FC<{
             <div className="flex items-center justify-between gap-2">
               <Button
                 variant="ghost"
-                buttonClassName="rounded-full px-4 py-2 text-sm font-medium text-zinc-500 transition-colors hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800/80 dark:hover:text-white"
+                buttonClassName="rounded-lg px-3 text-sm font-medium text-zinc-500 transition-colors hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800/80 dark:hover:text-white"
                 onClick={() => {
                   if (!item.feed?.id) return
                   window.open(UrlBuilder.shareFeed(item.feed.id, 0), "_blank")
